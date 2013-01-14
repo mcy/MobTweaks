@@ -22,6 +22,7 @@ public class Config {
     private boolean witherSkeletonsOnly = true;
     
     public int babyZombiePercentage = 5;
+    public int babyPigZombiePercentage = 5;
     public int slimeToWitchPercentage = 10;
     public int pigzombieToWitherskeletonPercentage = 25;
 	
@@ -81,6 +82,10 @@ public class Config {
         if (!conf.contains("baby-zombie-percentage"))
         	conf.set("baby-zombie-percentage", 5);
         babyZombiePercentage = conf.getInt("baby-zombie-percentage");
+        
+        if (!conf.contains("baby-pigzombie-percentage"))
+        	conf.set("baby-pigzombie-percentage", 5);
+        babyPigZombiePercentage = conf.getInt("baby-pigzombie-percentage");
         
         if (!conf.contains("slime-to-witch-percentage"))
         	conf.set("slime-to-witch-percentage", 10);

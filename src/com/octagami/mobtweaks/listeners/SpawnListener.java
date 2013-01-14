@@ -9,6 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Witch;
@@ -44,7 +45,21 @@ public class SpawnListener implements Listener {
 
 		if (event.getLocation().getWorld().getName().equals("world")) {
 
-			if (event.getEntityType() == EntityType.ZOMBIE) {
+			if (event.getEntityType() == EntityType.PIG_ZOMBIE) {
+				
+				if (random.nextInt(100) < plugin.getPluginConfig().babyPigZombiePercentage) {
+					
+					PigZombie pigZombie = (PigZombie) event.getEntity();
+					
+					if (plugin.getPluginConfig().DEBUG)
+						logChange(pigZombie, pigZombie);
+
+					pigZombie.setBaby(true);
+				}
+				
+			}
+			
+			else if (event.getEntityType() == EntityType.ZOMBIE) {
 				
 				if (random.nextInt(100) < plugin.getPluginConfig().babyZombiePercentage) {
 					
