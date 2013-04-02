@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -18,8 +19,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import com.octagami.mobtweaks.MobTweaks;
 
@@ -34,6 +37,26 @@ public class SpawnListener implements Listener {
 		this.plugin = plugin;
 	}
 
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onEntityDeath(EntityDeathEvent event) {
+		
+		if (event.getEntity().getType() != EntityType.ENDERMAN)
+			return;
+		
+		Enderman enderman = (Enderman)event.getEntity();
+		
+		MaterialData blockData = enderman.getCarriedMaterial();
+		
+		if (blockData == null)
+			return;
+		
+		if (blockData.getItemType() != Material.AIR) {
+			
+			ItemStack item = new ItemStack(blockData.getItemType());
+			enderman.getLocation().getWorld().dropItemNaturally(enderman.getLocation(), item);
+		}
+	}
+
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 
@@ -45,21 +68,7 @@ public class SpawnListener implements Listener {
 
 		if (event.getLocation().getWorld().getName().equals("world")) {
 
-			if (event.getEntityType() == EntityType.PIG_ZOMBIE) {
-				
-				if (random.nextInt(100) < plugin.getPluginConfig().babyPigZombiePercentage) {
-					
-					PigZombie pigZombie = (PigZombie) event.getEntity();
-					
-					if (plugin.getPluginConfig().DEBUG)
-						logChange(pigZombie, pigZombie);
-
-					pigZombie.setBaby(true);
-				}
-				
-			}
-			
-			else if (event.getEntityType() == EntityType.ZOMBIE) {
+			if (event.getEntityType() == EntityType.ZOMBIE) {
 				
 				if (random.nextInt(100) < plugin.getPluginConfig().babyZombiePercentage) {
 					
@@ -90,6 +99,19 @@ public class SpawnListener implements Listener {
 				}
 
 			}
+			else if (event.getEntityType() == EntityType.ENDERMAN) {
+				
+				if (random.nextInt(100) < plugin.getPluginConfig().endermanEndstonePercentageWorld) {
+					
+					Enderman enderman = (Enderman)event.getEntity();
+					
+					enderman.setCarriedMaterial(new MaterialData(121));	
+					
+					if (plugin.getPluginConfig().DEBUG)
+						logChange(event.getEntity(), enderman);
+				}
+				
+			}
 
 		} else if (event.getLocation().getWorld().getName().equals("world_nether")) {
 
@@ -97,19 +119,32 @@ public class SpawnListener implements Listener {
 
 				Location spawnLoc = event.getLocation();
 
-				if (spawnLoc.getBlock().getRelative(BlockFace.DOWN, 1).getType() != Material.NETHER_BRICK)
-					return;
+				if (spawnLoc.getBlock().getRelative(BlockFace.DOWN, 1).getType() == Material.NETHER_BRICK) {
+					
+					if (random.nextInt(100) < plugin.getPluginConfig().pigzombieToWitherskeletonPercentage) {
 
-				if (random.nextInt(100) < plugin.getPluginConfig().pigzombieToWitherskeletonPercentage) {
+						Skeleton skeleton = (Skeleton) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.SKELETON);
+						skeleton.setSkeletonType(SkeletonType.WITHER);
+						skeleton.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD));
 
-					Skeleton skeleton = (Skeleton) spawnLoc.getWorld().spawnEntity(spawnLoc, EntityType.SKELETON);
-					skeleton.setSkeletonType(SkeletonType.WITHER);
-					skeleton.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD));
+						if (plugin.getPluginConfig().DEBUG)
+							logChange(event.getEntity(), skeleton);
 
-					if (plugin.getPluginConfig().DEBUG)
-						logChange(event.getEntity(), skeleton);
+						event.setCancelled(true);
+					}
+					
+				}else {
+					
+					if (random.nextInt(100) < plugin.getPluginConfig().babyPigZombiePercentage) {
+						
+						PigZombie pigZombie = (PigZombie) event.getEntity();
+						
+						if (plugin.getPluginConfig().DEBUG)
+							logChange(pigZombie, pigZombie);
 
-					event.setCancelled(true);
+						pigZombie.setBaby(true);
+					}
+					
 				}
 
 			} else if (event.getEntityType() == EntityType.SKELETON && plugin.getPluginConfig().witherSkeletonsOnly()) {
@@ -126,6 +161,22 @@ public class SpawnListener implements Listener {
 
 			}
 
+		} else if (event.getLocation().getWorld().getName().equals("world_the_end")) {
+			
+			if (event.getEntityType() == EntityType.ENDERMAN) {
+				
+				if (random.nextInt(100) < plugin.getPluginConfig().endermanEndstonePercentageTheEnd) {
+					
+					Enderman enderman = (Enderman)event.getEntity();
+					
+					enderman.setCarriedMaterial(new MaterialData(121));	
+					
+					if (plugin.getPluginConfig().DEBUG)
+						logChange(event.getEntity(), enderman);
+				}
+				
+			}
+			
 		}
 
 	}

@@ -25,6 +25,8 @@ public class Config {
     public int babyPigZombiePercentage = 5;
     public int slimeToWitchPercentage = 10;
     public int pigzombieToWitherskeletonPercentage = 25;
+    public int endermanEndstonePercentageWorld = 50;
+    public int endermanEndstonePercentageTheEnd = 25;
 	
     public Config(MobTweaks plugin) {
         this.plugin = plugin;
@@ -94,6 +96,14 @@ public class Config {
         if (!conf.contains("pigzombie-to-witherskeleton-percentage"))
         	conf.set("pigzombie-to-witherskeleton-percentage", 25);
         pigzombieToWitherskeletonPercentage = conf.getInt("pigzombie-to-witherskeleton-percentage");
+        
+        if (!conf.contains("enderman-endstone-world-percentage"))
+        	conf.set("enderman-endstone-world-percentage", 50);
+        endermanEndstonePercentageWorld = conf.getInt("enderman-endstone-world-percentage");
+        
+        if (!conf.contains("enderman-endstone-end-percentage"))
+        	conf.set("enderman-endstone-end-percentage", 25);
+        endermanEndstonePercentageTheEnd = conf.getInt("enderman-endstone-end-percentage");
         
         try {
             conf.save(f);
