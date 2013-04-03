@@ -27,6 +27,12 @@ public class Config {
     public int pigzombieToWitherskeletonPercentage = 25;
     public int endermanEndstonePercentageWorld = 50;
     public int endermanEndstonePercentageTheEnd = 25;
+    public int pigZombieLevel1SignPercentage = 15;
+    public int pigZombieLevel2SignPercentage = 5;
+    public int pigZombieLevel3SignPercentage = 1;
+    
+    public boolean doPigZombieSigns = true;
+    public boolean doPigZombiePants = true;
 	
     public Config(MobTweaks plugin) {
         this.plugin = plugin;
@@ -104,6 +110,26 @@ public class Config {
         if (!conf.contains("enderman-endstone-end-percentage"))
         	conf.set("enderman-endstone-end-percentage", 25);
         endermanEndstonePercentageTheEnd = conf.getInt("enderman-endstone-end-percentage");
+        
+        if (!conf.contains("pigzombie-level-1-sign-percentage"))
+        	conf.set("pigzombie-level-1-sign-percentage", 15);
+        pigZombieLevel1SignPercentage = conf.getInt("pigzombie-level-1-sign-percentage");
+        
+        if (!conf.contains("pigzombie-level-2-sign-percentage"))
+        	conf.set("pigzombie-level-2-sign-percentage", 5);
+        pigZombieLevel2SignPercentage = conf.getInt("pigzombie-level-2-sign-percentage");
+        
+        if (!conf.contains("pigzombie-level-3-sign-percentage"))
+        	conf.set("pigzombie-level-3-sign-percentage", 1);
+        pigZombieLevel3SignPercentage = conf.getInt("pigzombie-level-3-sign-percentage");
+        
+        if (!conf.contains("do-pigzombie-signs"))
+        	conf.set("do-pigzombie-signs", true);
+        doPigZombieSigns = conf.getBoolean("do-pigzombie-signs");
+        
+        if (!conf.contains("do-pigzombie-pants"))
+        	conf.set("do-pigzombie-pants", true);
+        doPigZombiePants = conf.getBoolean("do-pigzombie-pants");
         
         try {
             conf.save(f);
